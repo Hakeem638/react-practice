@@ -1,12 +1,11 @@
 import { useState } from 'react'
+import MovieCard from './components/MovieCard'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
-    <h1>Hello World</h1>
-    <p>about to work on my first react project.</p>
+      <MovieCard movie={{ title: 'The Woman King', release_date: '4 Nov, 2024' }} />
     </>
   )
 }
