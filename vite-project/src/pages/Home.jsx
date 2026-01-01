@@ -1,18 +1,12 @@
 import { useState } from "react";
 import MovieCard from "../components/MovieCard";
 
-const style={
-  display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-  gap: '20px',
-  gridTemplateRows: 'masonry'
-}
- 
+
 
 function Home() {
 
   const [searchTerm, setSearchTerm] = useState('');
-
+  
   const movies=[
     { id: 1, title: 'The Woman King', release_date: '4 Nov, 2024' },
     { id: 2, title: 'Avatar 3', release_date: '20 Dec, 2024' },
@@ -21,7 +15,10 @@ function Home() {
     { id: 5, title: 'Mission: Impossible – Dead Reckoning Part One', release_date: '12 Jul, 2024' },
   ];
 
-  const handleSearch = (event) => {}
+  const handleSearch = (event) => {
+    event.preventDefault();
+    alert(`Searching for: ${searchTerm}`);
+  }
 
   const handleChange = (event) => {
     setSearchTerm(event.target.value);
@@ -35,9 +32,9 @@ function Home() {
         <button type="submit" className="search-button">Search</button>
       </form>
 
-      <div className="movies-grid" style={style}>
+      <div className="movies-grid">
          {movies.map((movie) => (
-        <MovieCard key={movie.id} movie={movie} />
+        movie.title.toLowerCase().includes(searchTerm.toLowerCase()) && <MovieCard key={movie.id} movie={movie} />
       ))}
       </div>
     </div>
