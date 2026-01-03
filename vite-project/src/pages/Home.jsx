@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect, use } from "react";
 import MovieCard from "../components/MovieCard";
+import { searchMovies, getPopularMovies } from "../services/api";   
 import "../css/Home.css"
 
 
@@ -7,14 +8,29 @@ import "../css/Home.css"
 function Home() {
 
   const [searchTerm, setSearchTerm] = useState('');
+  const [movies, setMovies] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
   
-  const movies=[
-    { id: 1, title: 'The Woman King', release_date: '4 Nov, 2024' },
-    { id: 2, title: 'Avatar 3', release_date: '20 Dec, 2024' },
-    { id: 3, title: 'Guardians of the Galaxy Vol. 3', release_date: '5 May, 2024' },
-    { id: 4, title: 'Dune: Part Two', release_date: '17 Oct, 2024' },
-    { id: 5, title: 'Mission: Impossible – Dead Reckoning Part One', release_date: '12 Jul, 2024' },
-  ];
+  
+  useEffect(() => {
+    const loadPopularMovies = async () => {
+      try {
+        const popularMovies = await getPopularMovies();
+        setMovies(popularMovies);
+      } catch (error) {
+        console.log(error);
+        setError('Failed to fetch popular movies...');
+      }
+      finally {
+        setLoading(false);
+      }
+    }
+
+    loadPopularMovies();  
+  }, []);  
+
+  
 
   const handleSearch = (event) => {
     event.preventDefault();
