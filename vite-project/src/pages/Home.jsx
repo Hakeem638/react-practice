@@ -1,6 +1,6 @@
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import MovieCard from "../components/MovieCard";
-import { searchMovies, getPopularMovies } from "../services/api";   
+import { searchMovies, getPopularMovies } from "../services/api.js";   
 import "../css/Home.css"
 
 
@@ -32,9 +32,26 @@ function Home() {
 
   
 
-  const handleSearch = (event) => {
+  const handleSearch = async(event) => {
     event.preventDefault();
-    alert(`Searching for: ${searchTerm}`);
+   if (!searchTerm.trim()) {
+     return;
+   }
+   if (loading) {
+     return;
+   }
+
+   setLoading(true)
+   try {
+    const searchResults =  await searchMovies(searchTerm)
+    setMovies(searchResults)
+    setError(null)
+  } catch (error) {
+      console.log(error);
+      setError('Failed to fetch search results...');
+  } finally {
+      setLoading(false);
+  }
   }
 
   const handleChange = (event) => {
@@ -49,11 +66,16 @@ function Home() {
         <button type="submit" className="search-button">Search</button>
       </form>
 
+      {error && <div className="error-message">{error}</div>}
+
+      {loading ? (
+        <div className="loading">Loading movies...</div>
+      ) : 
       <div className="movies-grid">
          {movies.map((movie) => (
         movie.title.toLowerCase().includes(searchTerm.toLowerCase()) && <MovieCard key={movie.id} movie={movie} />
       ))}
-      </div>
+      </div>}
     </div>
   )
 }
